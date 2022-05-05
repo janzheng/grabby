@@ -51,10 +51,6 @@ try {
 
 
 
-
-
-
-
 // 
 // GRABBERS
 // 
@@ -168,6 +164,7 @@ var url = 'https://sheets.googleapis.com/v4/spreadsheets/' +
 async function grab() {
   let data = {}
 
+
   console.log('[grab] Starting the grabbing!')
   await Promise.all(config.sources.map(async src => {
     console.log('[grab] >> grab-ing:', src.name, src.type, src.key, src.inputs)
@@ -191,6 +188,27 @@ async function grab() {
       data[src.name] = await csv().fromString(csv_text);
       console.log('[grab] gsheet 👍 >>>> ', data[src.name])
     }
+
+    // get json from an api endpoint
+    if (src.type == 'json-api') {
+      let _data = {}
+      if (src.inputs.url) {
+        const response = await fetch(src.inputs.url);
+        const json = await response.json();
+        _data = json
+      }
+      if (src.inputs.urls) {
+        let arr = []
+        await Promise.all(src.inputs.urls.map(async url => {
+          const response = await fetch(url);
+          const json = await response.json();
+          arr.push(json)
+        }))
+        _data = arr
+      }
+      data[src.name] = _data
+      console.log('[grab] json-api 👍 >>>> ', data[src.name])
+    }
     
     // get airtable using Cytosis
     if (src.type == 'airtable') {
@@ -201,7 +219,24 @@ async function grab() {
         flat: true,
       })
       data[src.name] = _cytosis.results
-      console.log('[grab] 👍 >>>> ', data[src.name])
+      console.log('[grab] airtable 👍 >>>> ', data[src.name])
+    }
+
+
+    // get notion from whimsy endpoint
+    if (src.type == 'whimsy') {
+      let _data = {}
+      if (src.inputs.url && src.inputs.ids) {
+        let arr = []
+        await Promise.all(src.inputs.ids.map(async id => {
+          const response = await fetch(`${src.inputs.url}/v1/${id}`);
+          const json = await response.json();
+          arr.push(json)
+        }))
+        _data = arr
+      }
+      data[src.name] = _data
+      console.log('[grab] whimsy 👍 >>>> ', data[src.name])
     }
 
     // get notion using official API
@@ -332,7 +367,7 @@ async function grab() {
       })
 
       data[src.name] = resarr
-      console.log('[grab] 👍 >>>> ', data[src.name])
+      console.log('[grab] notion 👍 >>>> ', data[src.name])
     }
 
   }))
