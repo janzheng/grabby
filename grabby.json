@@ -1,5 +1,5 @@
 { 
-  "flat": false,
+  "flat": true,
   "sources": [
     {
       "name": "json_example",

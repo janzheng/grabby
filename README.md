@@ -8,8 +8,6 @@ This thing grabs data from a bunch of sources and combines them into a single JS
 
 ## A bunch of notes
 
-
-
 Grabby the grubby Data Grabber
 
 - Take SOURCES and transform them into an array of JSON objects

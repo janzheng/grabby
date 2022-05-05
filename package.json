@@ -5,9 +5,6 @@
   "scripts": {
     "grabby": "node grabby.js ./grabby.json"
   },
-  "engines": {
-    "node": "12.x"
-  },
   "browser": {
     "airtable": "./node_modules/airtable/build/airtable.browser"
   },

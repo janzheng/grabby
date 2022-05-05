@@ -171,22 +171,30 @@ async function grab() {
 
     // get json file
     if(src.type == 'json') {
-      data[src.name] = require(src.inputs.path)
-      console.log('[grab] json 👍 >>>> ', data[src.name])
+      if(config.flat)
+        data = { ...data, ...require(src.inputs.path) }
+      else
+        data[src.name] = require(src.inputs.path)
     }
 
     // get csv file
     if (src.type == 'csv') {
-      data[src.name] = await csv().fromFile(src.inputs.path);
-      console.log('[grab] csv 👍 >>>> ', data[src.name])
+
+      if (config.flat)
+        data = { ...data, ...await csv().fromFile(src.inputs.path) }
+      else
+        data[src.name] = await csv().fromFile(src.inputs.path)
     }
     
     // get google sheet using API
     if (src.type == 'gsheet') {
       const response = await fetch(src.inputs.csv_url);
       const csv_text = await response.text();
-      data[src.name] = await csv().fromString(csv_text);
-      console.log('[grab] gsheet 👍 >>>> ', data[src.name])
+
+      if (config.flat)
+        data = { ...data, ...await csv().fromString(csv_text) }
+      else
+        data[src.name] = await csv().fromString(csv_text)
     }
 
     // get json from an api endpoint
@@ -206,8 +214,11 @@ async function grab() {
         }))
         _data = arr
       }
-      data[src.name] = _data
-      console.log('[grab] json-api 👍 >>>> ', data[src.name])
+
+      if (config.flat)
+        data = { ...data, ..._data }
+      else
+        data[src.name] = _data
     }
     
     // get airtable using Cytosis
@@ -218,8 +229,11 @@ async function grab() {
         bases: src.inputs.bases,
         flat: true,
       })
-      data[src.name] = _cytosis.results
-      console.log('[grab] airtable 👍 >>>> ', data[src.name])
+
+      if (config.flat)
+        data = { ...data, ..._cytosis.results }
+      else
+        data[src.name] = _cytosis.results
     }
 
 
@@ -235,8 +249,11 @@ async function grab() {
         }))
         _data = arr
       }
-      data[src.name] = _data
-      console.log('[grab] whimsy 👍 >>>> ', data[src.name])
+
+      if (config.flat)
+        data = { ...data, ..._data }
+      else
+        data[src.name] = _data
     }
 
     // get notion using official API
@@ -366,8 +383,10 @@ async function grab() {
         resarr.push(_data)
       })
 
-      data[src.name] = resarr
-      console.log('[grab] notion 👍 >>>> ', data[src.name])
+      if (config.flat)
+        data = { ...data, ...resarr }
+      else
+        data[src.name] = resarr
     }
 
   }))
