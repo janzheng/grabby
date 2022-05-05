@@ -3,7 +3,6 @@
   "description": "airtable base saver",
   "version": "0.0.1",
   "scripts": {
-    "airhangar": "node airhangar.js appjAmRNPiiw6L84a keymdLGucMsjWz7vs",
     "grabby": "node grabby.js ./grabby.json"
   },
   "engines": {
