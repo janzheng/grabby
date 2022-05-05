@@ -1,0 +1,44 @@
+{
+  "name": "airbase",
+  "description": "airtable base saver",
+  "version": "0.0.1",
+  "scripts": {
+    "airhangar": "node airhangar.js appjAmRNPiiw6L84a keymdLGucMsjWz7vs",
+    "grabby": "node grabby.js ./grabby.json"
+  },
+  "engines": {
+    "node": "12.x"
+  },
+  "browser": {
+    "airtable": "./node_modules/airtable/build/airtable.browser"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.9.2",
+    "cytosis": "^0.0.601",
+    "entities": "^2.0.3",
+    "node-fetch": "^2.6.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.9.0",
+    "@babel/plugin-syntax-dynamic-import": "^7.0.0",
+    "@babel/plugin-syntax-import-meta": "^7.10.4",
+    "@babel/plugin-transform-runtime": "^7.9.0",
+    "@babel/preset-env": "^7.0.0",
+    "@notionhq/client": "^1.0.4",
+    "airtable": "^0.8.1",
+    "autoprefixer": "^9.7.6",
+    "coeur": "^0.2.292",
+    "compression": "^1.7.1",
+    "csv-parse": "^5.0.4",
+    "csvtojson": "^2.0.10",
+    "dotenv": "^8.2.0",
+    "fs": "^0.0.1-security",
+    "lodash.debounce": "^4.0.8",
+    "lodash.memoize": "^4.1.2",
+    "marked": "^1.0.0",
+    "node-cache": "^5.1.1",
+    "npm-run-all": "^4.1.5",
+    "path": "^0.12.7",
+    "util": "^0.12.3"
+  }
+}

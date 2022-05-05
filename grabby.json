@@ -1,0 +1,61 @@
+{ "sources": [
+  {
+    "name": "json_example",
+    "type":"json",
+    "key": "_id",
+    "inputs": {
+      "path": "./example.json"
+    }
+  },
+  
+  {
+    "name": "csv_example",
+    "type":"csv",
+    "key": "_id",
+    "inputs": {
+      "path": "./example.csv"
+    }
+  },
+
+  {
+    "notes": "this Google Sheet uses Share to Web > publish as CSV",
+    "name": "gsheet-json_example",
+    "type":"gsheet",
+    "key": "_id",
+    "inputs": {
+      "csv_url": "https://docs.google.com/spreadsheets/d/e/2PACX-1vSYrUPGEMeBrHqgXB7SAtiHY6rpCtA6wabeq46yf41riJF8hQG0ds9EZmGr1kbmJiyFYVoWqx2Ito8I/pub?output=csv"
+    }
+  },
+
+  {
+    "name": "notion_example",
+    "type":"notion",
+    "key": "_id",
+    "inputs": {
+      "dbid": "63fd2f9abaa6487fbc89952ea125eef3",
+      "sorts": [
+        {
+          "property": "Name",
+          "direction": "descending"
+        }
+      ]
+    }
+  },
+
+  {
+    "name": "airtable_example",
+    "type":"airtable",
+    "key": "_id",
+    "inputs": {
+      "apiKey": "AIRTABLE_PRIVATE_API",
+      "baseId": "AIRTABLE_PRIVATE_BASE",
+      "bases": [
+        {
+          "tables": ["Partners"],
+          "options": {
+          }
+        }
+      ]
+    }
+  }
+]}
