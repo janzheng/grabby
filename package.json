@@ -1,8 +1,9 @@
 {
-  "name": "airbase",
-  "description": "airtable base saver",
-  "version": "0.0.1",
+  "name": "@yawnxyz/grabby",
+  "description": "grabs a whole bunch a stuff from a whole bunch a places",
+  "version": "0.0.3",
   "scripts": {
+    "pub": "npm publish --access public",
     "grabby": "node grabby.js ./grabby.json"
   },
   "browser": {
@@ -31,7 +32,6 @@
     "fs": "^0.0.1-security",
     "lodash.debounce": "^4.0.8",
     "lodash.memoize": "^4.1.2",
-    "marked": "^1.0.0",
     "node-cache": "^5.1.1",
     "npm-run-all": "^4.1.5",
     "path": "^0.12.7",

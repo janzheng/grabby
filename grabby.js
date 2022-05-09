@@ -38,7 +38,7 @@ let config
 console.log('Config file:', configFilePath)
 console.log('Output file:', outputFilePath)
 
-const notion = new Client({ auth: process.env.NOTION_API });
+let notion
 
 try {
   config = require(configFilePath)
@@ -46,53 +46,6 @@ try {
 } catch (err) { // do nothing if file doesn't exist // _err(err)
   console.error('Error:', err)
 }
-
-
-
-
-
-// 
-// GRABBERS
-// 
-
-// airtable
-const loadContent = async () => {
-
-  try {
-
-    // get Airhangar object
-    let cytosis = await getCytosis(hangarId, hangarKey, ["Bases"])
-    let bases = cytosis.results['Bases']
-    let data = {
-      bases: {}, // each base is stored as an object, with the name as the key (NOT an array)
-    }
-
-    await Promise.all(bases.map(async (base) => {
-      if (base.fields && base.fields['Active'] == true && base.fields['BaseId'] && base.fields['Tables']) {
-        data.bases[base.fields['Name']] = await getCytosis(base.fields['BaseId'], hangarKey, base.fields['Tables'], base.fields['View'] || "Grid view")
-        console.log('Saved: ', base.fields['Name'])
-      }
-    }))
-
-    await saveJson(data)
-
-  } catch (err) {
-    throw new Error('[yotion/loader] Error', err)
-  }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -116,47 +69,6 @@ const saveJson = async (data, path = outputFilePath) => {
   }
 };
 
-
-
-const getCytosis = async (baseId, apiKey, tables = ["Content"], view = "Grid view") => {
-  try {
-    let json;
-
-
-    let bases = [{
-      tables,
-      options: {
-        view
-      }
-    }
-    ]
-
-    let _cytosis = await new Cytosis({
-      apiKey,
-      baseId,
-      bases: bases,
-    })
-
-    return _cytosis
-
-  } catch (e) {
-    console.error('[getCytosis] error:', e)
-  }
-}
-
-
-
-
-/* 
-
-var url = 'https://sheets.googleapis.com/v4/spreadsheets/' +
-           spreadsheet_id + '/values/' + tab_name +
-           '?alt=json&key=' + api_key;
-($.getJSON(url, 'callback=?')).success(function(data) {
-  // ...
-};
-
-*/
 
 
 
@@ -241,13 +153,14 @@ async function grab() {
     if (src.type == 'whimsy') {
       let _data = {}
       if (src.inputs.url && src.inputs.ids) {
-        let arr = []
         await Promise.all(src.inputs.ids.map(async id => {
           const response = await fetch(`${src.inputs.url}/v1/${id}`);
           const json = await response.json();
-          arr.push(json)
-        }))
-        _data = arr
+          return json
+        })).then(items => {
+          console.log('----> ', items)
+          _data = items
+        })
       }
 
       if (config.flat)
@@ -259,6 +172,7 @@ async function grab() {
     // get notion using official API
     if (src.type == 'notion') {
       // const response = await notion.databases.retrieve({ database_id: databaseId });
+      if(!notion) notion = new Client({ auth: process.env.NOTION_API });
       const response = await notion.databases.query({
         database_id: src.inputs.dbid,
         filter: src.inputs.filter,
@@ -391,6 +305,7 @@ async function grab() {
 
   }))
 
+  console.log('[grab] data keys: ', Object.keys(data))
   console.log('[grab] Done! Saving data ------')
   await saveJson(data)
 }
